@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MemoryPop</string>
+    <string name="reveal_definition">\?</string>
+    <string name="next_word">Next Word</string>
+    <string name="ok">OK</string>
 </resources>

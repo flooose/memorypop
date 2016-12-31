@@ -20,4 +20,16 @@
         android:id="@+id/entry_definition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/reveal_definition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reveal_definition"
+        android:onClick="toggleDefinition"/>
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next_word"
+        android:onClick="nextWord"/>
 </LinearLayout>
