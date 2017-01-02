@@ -3,4 +3,6 @@
     <string name="reveal_definition">\?</string>
     <string name="next_word">Next Word</string>
     <string name="ok">OK</string>
+    <string name="auth_failed">Login failed.</string>
+    <string name="auth_succeeded">Login success.</string>
 </resources>
