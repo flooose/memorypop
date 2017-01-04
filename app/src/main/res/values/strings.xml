@@ -7,4 +7,6 @@
     <string name="auth_succeeded">Login success.</string>
     <string name="new_word">+</string>
     <string name="submit">Submit</string>
+    <string name="hint_word">New Word</string>
+    <string name="hint_definition">Definition</string>
 </resources>

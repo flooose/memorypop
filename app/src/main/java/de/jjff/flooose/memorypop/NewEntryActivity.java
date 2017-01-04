@@ -40,6 +40,11 @@ public class NewEntryActivity extends AppCompatActivity {
     private EditText newWordDefinition;
     private Button submitNewWord;
     private DatabaseReference dictionaryRef;
+    private View playLayout;
+    private View newWordLayout;
+    private View startLayout;
+    private View playButton;
+    private View newWordButton;
 
     @Override
     public void onStart() {
@@ -82,6 +87,30 @@ public class NewEntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
+        playLayout = findViewById(R.id.playLayout);
+        newWordLayout = findViewById(R.id.newWordLayout);
+        startLayout = findViewById(R.id.startLayout);
+        playButton = startLayout.findViewById(R.id.play_button);
+        newWordButton = startLayout.findViewById(R.id.new_word_button);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playLayout.setVisibility(View.VISIBLE);
+                newWordLayout.setVisibility(View.GONE);
+
+            }
+        });
+
+        newWordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newWordLayout.setVisibility(View.VISIBLE);
+                playLayout.setVisibility(View.GONE);
+
+            }
+        });
 
         newWord = (EditText) findViewById(R.id.newWord);
         newWordDefinition = (EditText) findViewById(R.id.newWordDefinition);
@@ -186,12 +215,6 @@ public class NewEntryActivity extends AppCompatActivity {
 
         TextView wordView = (TextView) findViewById(R.id.entry_word);
         wordView.setText(currentEntry.mWord);
-    }
-
-    public void addNewWord(View view) {
-        newWord.setVisibility(View.VISIBLE);
-        newWordDefinition.setVisibility(View.VISIBLE);
-        submitNewWord.setVisibility(View.VISIBLE);
     }
 
     public void submitNewWord(View view) {
