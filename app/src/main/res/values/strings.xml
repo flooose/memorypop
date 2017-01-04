@@ -5,4 +5,6 @@
     <string name="ok">OK</string>
     <string name="auth_failed">Login failed.</string>
     <string name="auth_succeeded">Login success.</string>
+    <string name="new_word">+</string>
+    <string name="submit">Submit</string>
 </resources>

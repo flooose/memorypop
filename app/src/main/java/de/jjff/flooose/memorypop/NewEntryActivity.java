@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,10 @@ public class NewEntryActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mCurrentUser;
+    private EditText newWord;
+    private EditText newWordDefinition;
+    private Button submitNewWord;
+    private DatabaseReference dictionaryRef;
 
     @Override
     public void onStart() {
@@ -77,6 +83,10 @@ public class NewEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
 
+        newWord = (EditText) findViewById(R.id.newWord);
+        newWordDefinition = (EditText) findViewById(R.id.newWordDefinition);
+        submitNewWord = (Button) findViewById(R.id.submitNewWord);
+
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -99,19 +109,51 @@ public class NewEntryActivity extends AppCompatActivity {
     private void populateDatabase() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
-        DatabaseReference dictionaryRef = userRef.child("dictionary");
+        dictionaryRef = userRef.child("dictionary");
+
+        dictionaryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                newWordDefinition.setText("");
+                newWord.setText("");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         dictionaryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {};
+                GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {
+                };
 
                 GenericTypeIndicator<List<DictionaryEntry>> dictinaryEntries =
-                        new GenericTypeIndicator<List<DictionaryEntry>>(){};
+                        new GenericTypeIndicator<List<DictionaryEntry>>() {
+                        };
 
                 List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
-                NewEntryActivity.this.currentDictionary.dictionaryEntries = de;
-                NewEntryActivity.this.displayRandomWord();
+                if (de != null) {
+                    NewEntryActivity.this.currentDictionary.dictionaryEntries = de;
+                    NewEntryActivity.this.displayRandomWord();
+                }
             }
 
             @Override
@@ -124,7 +166,7 @@ public class NewEntryActivity extends AppCompatActivity {
     public void toggleDefinition(View view) {
         TextView wordView = (TextView) findViewById(R.id.entry_word);
         Button button = (Button) findViewById(R.id.reveal_definition);
-        if(button.getText().equals(getString(R.string.reveal_definition))) {
+        if (button.getText().equals(getString(R.string.reveal_definition))) {
             button.setText(getString(R.string.ok));
             wordView.setText(currentEntry.mDefinition);
         } else {
@@ -144,5 +186,21 @@ public class NewEntryActivity extends AppCompatActivity {
 
         TextView wordView = (TextView) findViewById(R.id.entry_word);
         wordView.setText(currentEntry.mWord);
+    }
+
+    public void addNewWord(View view) {
+        newWord.setVisibility(View.VISIBLE);
+        newWordDefinition.setVisibility(View.VISIBLE);
+        submitNewWord.setVisibility(View.VISIBLE);
+    }
+
+    public void submitNewWord(View view) {
+        String word = newWord.getText().toString();
+        String definition = newWordDefinition.getText().toString();
+
+        if (!word.isEmpty()) {
+            currentDictionary.dictionaryEntries.add(new DictionaryEntry(word, definition));
+            dictionaryRef.setValue(currentDictionary.dictionaryEntries);
+        }
     }
 }

@@ -32,4 +32,27 @@
         android:layout_height="wrap_content"
         android:text="@string/next_word"
         android:onClick="nextWord"/>
+    <Button
+        android:id="@+id/addNewWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_word"
+        android:onClick="addNewWord"/>
+    <EditText
+        android:id="@+id/newWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+    <EditText
+        android:id="@+id/newWordDefinition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+    <Button
+        android:id="@+id/submitNewWord"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="submitNewWord"
+        android:text="@string/submit"/>
 </LinearLayout>
