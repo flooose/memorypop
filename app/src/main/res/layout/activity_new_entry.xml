@@ -37,6 +37,7 @@
         android:id="@+id/playLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -44,26 +45,35 @@
             android:id="@+id/entry_word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="etwas nicht entgehen lassen"/>
+            android:fontFamily="serif"
+            android:text="etwas nicht entgehen lassen"
+            android:textSize="36dp"
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/entry_definition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/reveal_definition"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="toggleDefinition"
-            android:text="@string/reveal_definition" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="displayRandomWord"
-            android:text="@string/next_word" />
+            <Button
+                android:id="@+id/reveal_definition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="toggleDefinition"
+                android:text="@string/reveal_definition" />
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="displayRandomWord"
+                android:text="@string/next_word" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -71,6 +81,7 @@
         android:id="@+id/newWordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:orientation="vertical"
         android:visibility="gone">
 
