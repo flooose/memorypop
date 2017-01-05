@@ -45,6 +45,7 @@ public class NewEntryActivity extends AppCompatActivity {
     private View startLayout;
     private View playButton;
     private View newWordButton;
+    private Button definitionToggle;
 
     @Override
     public void onStart() {
@@ -93,6 +94,7 @@ public class NewEntryActivity extends AppCompatActivity {
         startLayout = findViewById(R.id.startLayout);
         playButton = startLayout.findViewById(R.id.play_button);
         newWordButton = startLayout.findViewById(R.id.new_word_button);
+        definitionToggle = (Button) findViewById(R.id.reveal_definition);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,29 +194,29 @@ public class NewEntryActivity extends AppCompatActivity {
         });
     }
 
-    public void toggleDefinition(View view) {
+    public void toggleDefinition(View view) { toggleDefinition();}
+    public void toggleDefinition() {
         TextView wordView = (TextView) findViewById(R.id.entry_word);
-        Button button = (Button) findViewById(R.id.reveal_definition);
-        if (button.getText().equals(getString(R.string.reveal_definition))) {
-            button.setText(getString(R.string.ok));
+
+        if (definitionToggle.getText().equals(getString(R.string.reveal_definition))) {
+            definitionToggle.setText(getString(R.string.ok));
             wordView.setText(currentEntry.mDefinition);
         } else {
-            button.setText(getString(R.string.reveal_definition));
+            definitionToggle.setText(getString(R.string.reveal_definition));
             wordView.setText(currentEntry.mWord);
 
         }
     }
 
-    public void nextWord(View view) {
-        displayRandomWord();
-    }
-
-    private void displayRandomWord() {
+    public void displayRandomWord(View view) { displayRandomWord();}
+    public void displayRandomWord() {
         int currentEntryIndex = new Random().nextInt(currentDictionary.dictionaryEntries.size());
         currentEntry = currentDictionary.dictionaryEntries.get(currentEntryIndex);
 
         TextView wordView = (TextView) findViewById(R.id.entry_word);
         wordView.setText(currentEntry.mWord);
+        definitionToggle.setText(getString(R.string.reveal_definition));
+
     }
 
     public void submitNewWord(View view) {
