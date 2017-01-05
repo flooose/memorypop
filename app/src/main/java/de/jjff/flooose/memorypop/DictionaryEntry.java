@@ -20,4 +20,9 @@ public class DictionaryEntry {
     public void setmDefinition(String definition) {
         this.mDefinition = definition;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof DictionaryEntry && ((DictionaryEntry) obj).mWord.equalsIgnoreCase(mWord);
+    }
 }
