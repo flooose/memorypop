@@ -73,6 +73,12 @@
                 android:layout_height="wrap_content"
                 android:onClick="displayRandomWord"
                 android:text="@string/next_word" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="editEntry"
+                android:text="@string/edit" />
         </LinearLayout>
 
     </LinearLayout>
@@ -103,11 +109,25 @@
             android:inputType="text"
             android:maxLines="1" />
 
-        <Button
-            android:id="@+id/submitNewWord"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="submitNewWord"
-            android:text="@string/submit" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/submitNewWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="submitNewWord"
+                android:text="@string/submit" />
+
+            <Button
+                android:id="@+id/cancelNewWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="cancelNewWord"
+                android:text="@string/cancel" />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

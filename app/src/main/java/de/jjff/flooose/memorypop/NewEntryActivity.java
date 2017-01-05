@@ -46,20 +46,12 @@ public class NewEntryActivity extends AppCompatActivity {
     private View playButton;
     private View newWordButton;
     private Button definitionToggle;
+    private boolean editing;
 
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-
         mAuth.signInWithEmailAndPassword("skeptikos@gmail.com", "snafu1234")
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -81,7 +73,14 @@ public class NewEntryActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @Override
@@ -145,28 +144,33 @@ public class NewEntryActivity extends AppCompatActivity {
         dictionaryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                newWordDefinition.setText("");
-                newWord.setText("");
+                clearFields();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                clearFields();
+                cancelNewWord(null);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                clearFields();
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                clearFields();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                clearFields();
+            }
 
+            private void clearFields() {
+                newWordDefinition.setText("");
+                newWord.setText("");
             }
         });
 
@@ -183,7 +187,11 @@ public class NewEntryActivity extends AppCompatActivity {
                 List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
                 if (de != null) {
                     NewEntryActivity.this.currentDictionary.dictionaryEntries = de;
-                    NewEntryActivity.this.displayRandomWord();
+                    if(editing) {
+                        editing = false;
+                    } else {
+                        NewEntryActivity.this.displayRandomWord();
+                    }
                 }
             }
 
@@ -223,9 +231,32 @@ public class NewEntryActivity extends AppCompatActivity {
         String word = newWord.getText().toString();
         String definition = newWordDefinition.getText().toString();
 
+        DictionaryEntry dictionaryEntry = new DictionaryEntry(word, definition);
+        int dictionaryIndex = currentDictionary.dictionaryEntries.indexOf(dictionaryEntry);
+
         if (!word.isEmpty()) {
-            currentDictionary.dictionaryEntries.add(new DictionaryEntry(word, definition));
+            if (dictionaryIndex >= 0) {
+                currentDictionary.dictionaryEntries.set(dictionaryIndex, dictionaryEntry);
+            } else {
+                currentDictionary.dictionaryEntries.add(dictionaryEntry);
+            }
+
             dictionaryRef.setValue(currentDictionary.dictionaryEntries);
         }
+    }
+
+    public void cancelNewWord(View view) {
+        newWordDefinition.setText("");
+        newWord.setText("");
+        playLayout.setVisibility(View.VISIBLE);
+        newWordLayout.setVisibility(View.GONE);
+    }
+
+    public void editEntry(View view) {
+        editing = true;
+        newWord.setText(currentEntry.mWord);
+        newWordDefinition.setText(currentEntry.mDefinition);
+        newWordLayout.setVisibility(View.VISIBLE);
+        playLayout.setVisibility(View.GONE);
     }
 }

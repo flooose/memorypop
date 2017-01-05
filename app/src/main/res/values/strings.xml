@@ -9,4 +9,6 @@
     <string name="submit">Submit</string>
     <string name="hint_word">New Word</string>
     <string name="hint_definition">Definition</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
 </resources>
