@@ -26,6 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Inject;
+
+import de.jjff.flooose.memorypop.daggerstuff.ActivityComponent;
+import de.jjff.flooose.memorypop.daggerstuff.ActivityModule;
+import de.jjff.flooose.memorypop.daggerstuff.DaggerActivityComponent;
+import de.jjff.flooose.memorypop.services.DataService;
+import de.jjff.flooose.memorypop.services.FirebaseDataService;
+
 import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
 
 
@@ -48,10 +56,18 @@ public class NewEntryActivity extends AppCompatActivity {
     private Button definitionToggle;
     private boolean editing;
 
+    ActivityComponent component;
+
+    @Inject
+    DataService firebaseDataService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
+        component = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
+        component.inject(this);
 
         playLayout = findViewById(R.id.playLayout);
         newWordLayout = findViewById(R.id.newWordLayout);
@@ -101,14 +117,6 @@ public class NewEntryActivity extends AppCompatActivity {
         currentDictionary = StaticDictionaryService.getDefaultDictionary();
     }
 
-    private void populateDatabase() {
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
-        dictionaryRef = userRef.child("dictionary");
-
-        dictionaryRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
     @Override
     public void onStart() {
         super.onStart();
@@ -144,6 +152,14 @@ public class NewEntryActivity extends AppCompatActivity {
         }
     }
 
+    private void populateDatabase() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
+        dictionaryRef = userRef.child("dictionary");
+
+        dictionaryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 clearFields();
             }
 

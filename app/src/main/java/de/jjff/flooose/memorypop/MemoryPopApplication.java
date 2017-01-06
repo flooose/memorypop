@@ -8,4 +8,9 @@ import android.app.Application;
 
 public class MemoryPopApplication extends Application {
     public static String LOG_TAG = "MemoryPop";
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
 }
