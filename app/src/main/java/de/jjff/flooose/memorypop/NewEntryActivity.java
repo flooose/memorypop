@@ -49,41 +49,6 @@ public class NewEntryActivity extends AppCompatActivity {
     private boolean editing;
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-        mAuth.signInWithEmailAndPassword("skeptikos@gmail.com", "snafu1234")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(LOG_TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(LOG_TAG, "signInWithEmail:failed", task.getException());
-                            Toast.makeText(NewEntryActivity.this, R.string.auth_failed,
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(NewEntryActivity.this, R.string.auth_succeeded,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        // ...
-                    }
-                });
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
@@ -144,6 +109,41 @@ public class NewEntryActivity extends AppCompatActivity {
         dictionaryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+        mAuth.signInWithEmailAndPassword("skeptikos@gmail.com", "snafu1234")
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(LOG_TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(LOG_TAG, "signInWithEmail:failed", task.getException());
+                            Toast.makeText(NewEntryActivity.this, R.string.auth_failed,
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(NewEntryActivity.this, R.string.auth_succeeded,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
                 clearFields();
             }
 
