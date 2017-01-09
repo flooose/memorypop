@@ -4,19 +4,21 @@ import android.app.Activity;
 
 import dagger.Module;
 import dagger.Provides;
+import de.jjff.flooose.memorypop.NewEntryActivity;
 import de.jjff.flooose.memorypop.services.DataService;
 import de.jjff.flooose.memorypop.services.FirebaseDataService;
 
 @Module
 public class ActivityModule {
-    Activity mActivity;
+    NewEntryActivity mActivity;
 
-    public ActivityModule(Activity activity) {
+    // this should probably be an interface instead of an entire activity
+    public ActivityModule(NewEntryActivity activity) {
         mActivity = activity;
     }
 
     @Provides
     DataService dataService() {
-        return new FirebaseDataService();
+        return new FirebaseDataService(mActivity);
     }
 }

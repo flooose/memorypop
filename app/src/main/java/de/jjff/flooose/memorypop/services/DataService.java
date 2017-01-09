@@ -13,4 +13,8 @@ import de.jjff.flooose.memorypop.DictionaryEntry;
 
 public interface DataService {
     List<DictionaryEntry> getDictionaryData();
+
+    void setValue(List<DictionaryEntry> dictionaryEntries);
+
+    void stop();
 }
