@@ -89,33 +89,28 @@ public class FirebaseDataService implements DataService {
         dictionaryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                clearFields();
+                mActivity.clearFields();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                clearFields();
+                mActivity.clearFields();
                 mActivity.cancelNewWord(null);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                clearFields();
+                mActivity.clearFields();
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                clearFields();
+                mActivity.clearFields();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                clearFields();
-            }
-
-            private void clearFields() {
-                mActivity.newWordDefinition.setText("");
-                mActivity.newWord.setText("");
+                mActivity.clearFields();
             }
         });
 

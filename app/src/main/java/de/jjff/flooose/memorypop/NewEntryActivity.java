@@ -12,6 +12,9 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.jjff.flooose.memorypop.daggerstuff.ActivityComponent;
 import de.jjff.flooose.memorypop.daggerstuff.ActivityModule;
 import de.jjff.flooose.memorypop.daggerstuff.DaggerActivityComponent;
@@ -21,15 +24,8 @@ import de.jjff.flooose.memorypop.services.DataService;
 public class NewEntryActivity extends AppCompatActivity {
 
     private DictionaryEntry currentEntry;
-    public EditText newWord;
-    public EditText newWordDefinition;
-    private Button submitNewWord;
-    private View playLayout;
-    private View newWordLayout;
-    private View startLayout;
     private View playButton;
     private View newWordButton;
-    private Button definitionToggle;
     public boolean editing;
     public List<DictionaryEntry> dictionaryEntries;
 
@@ -38,20 +34,25 @@ public class NewEntryActivity extends AppCompatActivity {
     @Inject
     DataService firebaseDataService;
 
+    @BindView(R.id.playLayout) View playLayout;
+    @BindView(R.id.newWordLayout) View newWordLayout;
+    @BindView(R.id.startLayout) View startLayout;
+    @BindView(R.id.reveal_definition) Button definitionToggle;
+    @BindView(R.id.newWord) EditText newWord;
+    @BindView(R.id.newWordDefinition) EditText newWordDefinition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
+        ButterKnife.bind(this);
 
         component = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
         component.inject(this);
 
-        playLayout = findViewById(R.id.playLayout);
-        newWordLayout = findViewById(R.id.newWordLayout);
-        startLayout = findViewById(R.id.startLayout);
+        // TODO move this to own layout
         playButton = startLayout.findViewById(R.id.play_button);
         newWordButton = startLayout.findViewById(R.id.new_word_button);
-        definitionToggle = (Button) findViewById(R.id.reveal_definition);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,16 +71,9 @@ public class NewEntryActivity extends AppCompatActivity {
 
             }
         });
-
-        newWord = (EditText) findViewById(R.id.newWord);
-        newWordDefinition = (EditText) findViewById(R.id.newWordDefinition);
-        submitNewWord = (Button) findViewById(R.id.submitNewWord);
     }
 
-    public void toggleDefinition(View view) {
-        toggleDefinition();
-    }
-
+    @OnClick(R.id.reveal_definition)
     public void toggleDefinition() {
         TextView wordView = (TextView) findViewById(R.id.entry_word);
 
@@ -93,7 +87,7 @@ public class NewEntryActivity extends AppCompatActivity {
         }
     }
 
-    public void displayRandomWord(View view) { displayRandomWord();}
+    @OnClick(R.id.ok)
     public void displayRandomWord() {
         int currentEntryIndex = new Random().nextInt(dictionaryEntries.size());
         currentEntry = dictionaryEntries.get(currentEntryIndex);
@@ -104,6 +98,7 @@ public class NewEntryActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.submitNewWord)
     public void submitNewWord(View view) {
         String word = newWord.getText().toString();
         String definition = newWordDefinition.getText().toString();
@@ -122,6 +117,13 @@ public class NewEntryActivity extends AppCompatActivity {
         }
     }
 
+    public void resetFrom() {
+        newWordDefinition.setText("");
+        newWord.setText("");
+        newWord.requestFocus();
+    }
+
+    @OnClick(R.id.cancelNewWord)
     public void cancelNewWord(View view) {
         newWordDefinition.setText("");
         newWord.setText("");
@@ -129,6 +131,7 @@ public class NewEntryActivity extends AppCompatActivity {
         newWordLayout.setVisibility(View.GONE);
     }
 
+    @OnClick(R.id.editEntry)
     public void editEntry(View view) {
         editing = true;
         newWord.setText(currentEntry.mWord);

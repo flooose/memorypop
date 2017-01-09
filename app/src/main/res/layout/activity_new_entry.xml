@@ -64,20 +64,18 @@
                 android:id="@+id/reveal_definition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="toggleDefinition"
                 android:text="@string/reveal_definition" />
 
             <Button
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="displayRandomWord"
                 android:text="@string/next_word" />
 
             <Button
+                android:id="@+id/editEntry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="editEntry"
                 android:text="@string/edit" />
         </LinearLayout>
 
@@ -118,14 +116,12 @@
                 android:id="@+id/submitNewWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="submitNewWord"
                 android:text="@string/submit" />
 
             <Button
                 android:id="@+id/cancelNewWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="cancelNewWord"
                 android:text="@string/cancel" />
         </LinearLayout>
 
