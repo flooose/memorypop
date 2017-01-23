@@ -13,6 +13,4 @@ import de.jjff.flooose.memorypop.services.FirebaseDataService;
 public interface ActivityComponent {
 
     void inject(NewEntryActivity newEntryActivity);
-
-    DataService dataService();
 }

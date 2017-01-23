@@ -1,5 +1,6 @@
 package de.jjff.flooose.memorypop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -138,5 +139,10 @@ public class NewEntryActivity extends AppCompatActivity {
         newWordDefinition.setText(currentEntry.mDefinition);
         newWordLayout.setVisibility(View.VISIBLE);
         playLayout.setVisibility(View.GONE);
+    }
+
+    public void signInOrUp() {
+        Intent intent = new Intent(this, SigninOrUpActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package de.jjff.flooose.memorypop.services;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import java.util.List;
 import de.jjff.flooose.memorypop.DictionaryEntry;
 import de.jjff.flooose.memorypop.NewEntryActivity;
 import de.jjff.flooose.memorypop.R;
+import de.jjff.flooose.memorypop.SigninOrUpActivity;
 
 import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
 
@@ -42,6 +44,7 @@ public class FirebaseDataService implements DataService {
         mActivity = activity;
 
         mAuth = FirebaseAuth.getInstance();
+
         mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -51,34 +54,13 @@ public class FirebaseDataService implements DataService {
                     populateDatabase();
                     Log.d(LOG_TAG, "onAuthStateChanged:signed_in:" + mCurrentUser.getUid());
                 } else {
-                    // User is signed out
+                    mActivity.signInOrUp();
                     Log.d(LOG_TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
             }
         });
 
-        mAuth.signInWithEmailAndPassword("skeptikos@gmail.com", "snafu1234")
-                .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(LOG_TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(LOG_TAG, "signInWithEmail:failed", task.getException());
-                            Toast.makeText(mActivity, R.string.auth_failed,
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(mActivity, R.string.auth_succeeded,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        // ...
-                    }
-                });
     }
 
     private void populateDatabase() {
@@ -154,5 +136,6 @@ public class FirebaseDataService implements DataService {
     @Override
     public void stop() {
         mAuth.removeAuthStateListener(mAuthListener);
+        mAuth.signOut();
     }
 }

@@ -11,4 +11,8 @@
     <string name="hint_definition">Definition</string>
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_signin_or_up">SigninOrUpActivity</string>
+    <string name="login">Login</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
 </resources>
