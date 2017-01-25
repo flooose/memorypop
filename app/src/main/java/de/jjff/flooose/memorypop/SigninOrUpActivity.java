@@ -34,8 +34,6 @@ public class SigninOrUpActivity extends AppCompatActivity implements OnCompleteL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_or_up);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         //component = DaggerLoginComponent.builder().loginModule(new LoginModule(this)).build();
         component = DaggerLoginComponent.create();
