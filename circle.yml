@@ -1,0 +1,3 @@
+dependencies:
+  pre:
+    - echo $G_SERVICES | base64 --decode > ~/memorypop/app/google-services.json
