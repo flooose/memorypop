@@ -10,10 +10,10 @@ import de.jjff.flooose.memorypop.services.FirebaseDataService;
 
 @Module
 public class ActivityModule {
-    NewEntryActivity mActivity;
+    Blub mActivity;
 
     // this should probably be an interface instead of an entire activity
-    public ActivityModule(NewEntryActivity activity) {
+    public ActivityModule(Blub activity) {
         mActivity = activity;
     }
 

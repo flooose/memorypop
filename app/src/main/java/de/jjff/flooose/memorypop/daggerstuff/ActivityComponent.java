@@ -12,5 +12,5 @@ import de.jjff.flooose.memorypop.services.FirebaseDataService;
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {
 
-    void inject(NewEntryActivity newEntryActivity);
+    void inject(Blub blub);
 }

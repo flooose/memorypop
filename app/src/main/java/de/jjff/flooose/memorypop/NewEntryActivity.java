@@ -18,11 +18,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.jjff.flooose.memorypop.daggerstuff.ActivityComponent;
 import de.jjff.flooose.memorypop.daggerstuff.ActivityModule;
+import de.jjff.flooose.memorypop.daggerstuff.Blub;
 import de.jjff.flooose.memorypop.daggerstuff.DaggerActivityComponent;
 import de.jjff.flooose.memorypop.services.DataService;
 
 
-public class NewEntryActivity extends AppCompatActivity {
+public class NewEntryActivity extends AppCompatActivity implements Blub {
 
     private DictionaryEntry currentEntry;
     private View playButton;
@@ -139,6 +140,21 @@ public class NewEntryActivity extends AppCompatActivity {
         newWordDefinition.setText(currentEntry.mDefinition);
         newWordLayout.setVisibility(View.VISIBLE);
         playLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean isEditing() {
+        return editing;
+    }
+
+    @Override
+    public void setEditing(boolean b) {
+        this.editing = b;
+    }
+
+    @Override
+    public void setDictionaryEntries(List<DictionaryEntry> de) {
+        this.dictionaryEntries = de;
     }
 
     public void signInOrUp() {

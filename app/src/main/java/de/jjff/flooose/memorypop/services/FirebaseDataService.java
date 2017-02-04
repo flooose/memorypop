@@ -25,6 +25,7 @@ import de.jjff.flooose.memorypop.DictionaryEntry;
 import de.jjff.flooose.memorypop.NewEntryActivity;
 import de.jjff.flooose.memorypop.R;
 import de.jjff.flooose.memorypop.SigninOrUpActivity;
+import de.jjff.flooose.memorypop.daggerstuff.Blub;
 
 import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
 
@@ -33,13 +34,13 @@ import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
  */
 
 public class FirebaseDataService implements DataService {
-    private final NewEntryActivity mActivity;
+    private final Blub mActivity;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mCurrentUser;
     private DatabaseReference dictionaryRef;
 
-    public FirebaseDataService(NewEntryActivity activity) {
+    public FirebaseDataService(Blub activity) {
         // this should probably be an interface, not a whole activity
         mActivity = activity;
 
@@ -108,9 +109,9 @@ public class FirebaseDataService implements DataService {
 
                 List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
                 if (de != null) {
-                    mActivity.dictionaryEntries = de;
-                    if(mActivity.editing) {
-                        mActivity.editing = false;
+                    mActivity.setDictionaryEntries(de);
+                    if(mActivity.isEditing()) {
+                        mActivity.setEditing(false);
                     } else {
                         mActivity.displayRandomWord();
                     }
