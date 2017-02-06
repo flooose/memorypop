@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+                startActivity(intent);
 
 //                playLayout.setVisibility(View.VISIBLE);
 //                newWordLayout.setVisibility(View.GONE);

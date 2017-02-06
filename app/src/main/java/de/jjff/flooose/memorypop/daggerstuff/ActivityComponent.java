@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 
 import dagger.Component;
 import de.jjff.flooose.memorypop.NewEntryActivity;
+import de.jjff.flooose.memorypop.PlayActivity;
 import de.jjff.flooose.memorypop.services.DataService;
 import de.jjff.flooose.memorypop.services.FirebaseDataService;
 
@@ -12,5 +13,6 @@ import de.jjff.flooose.memorypop.services.FirebaseDataService;
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {
 
-    void inject(Blub blub);
+    void inject(NewEntryActivity blub);
+    void inject(PlayActivity blub);
 }
