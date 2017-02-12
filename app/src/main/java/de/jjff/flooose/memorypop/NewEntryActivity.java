@@ -52,6 +52,8 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         component = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
         component.inject(this);
 
+        dictionaryEntries = firebaseDataService.getDictionaryData();
+
         // TODO move this to own layout
         playButton = startLayout.findViewById(R.id.play_button);
         newWordButton = startLayout.findViewById(R.id.new_word_button);

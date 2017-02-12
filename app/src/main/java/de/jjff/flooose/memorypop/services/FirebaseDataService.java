@@ -1,13 +1,8 @@
 package de.jjff.flooose.memorypop.services;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -22,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jjff.flooose.memorypop.DictionaryEntry;
-import de.jjff.flooose.memorypop.NewEntryActivity;
-import de.jjff.flooose.memorypop.R;
-import de.jjff.flooose.memorypop.SigninOrUpActivity;
 import de.jjff.flooose.memorypop.daggerstuff.Blub;
 
 import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
@@ -38,18 +30,20 @@ public class FirebaseDataService implements DataService {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mCurrentUser;
-    private DatabaseReference dictionaryRef;
+    private DatabaseReference mDictionaryRef;
 
     public FirebaseDataService(Blub activity) {
         // this should probably be an interface, not a whole activity
         mActivity = activity;
 
         mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
 
         mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 mCurrentUser = firebaseAuth.getCurrentUser();
+
                 if (mCurrentUser != null) {
                     // User is signed in
                     populateDatabase();
@@ -65,64 +59,78 @@ public class FirebaseDataService implements DataService {
     }
 
     private void populateDatabase() {
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
-        dictionaryRef = userRef.child("dictionary");
+        mDictionaryRef = getDictionary();
 
-        dictionaryRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mActivity.resetFrom();
-            }
+        if(mDictionaryRef != null) {
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                mActivity.resetFrom();
-                mActivity.cancelNewWord(null);
-            }
+            mDictionaryRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    mActivity.resetFrom();
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                mActivity.resetFrom();
-            }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    mActivity.resetFrom();
+                    mActivity.cancelNewWord(null);
+                }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                mActivity.resetFrom();
-            }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    mActivity.resetFrom();
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mActivity.resetFrom();
-            }
-        });
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    mActivity.resetFrom();
+                }
 
-        dictionaryRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {
-                };
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    mActivity.resetFrom();
+                }
+            });
 
-                GenericTypeIndicator<List<DictionaryEntry>> dictinaryEntries =
-                        new GenericTypeIndicator<List<DictionaryEntry>>() {
-                        };
+            mDictionaryRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {
+                    };
 
-                List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
-                if (de != null) {
-                    mActivity.setDictionaryEntries(de);
-                    if(mActivity.isEditing()) {
-                        mActivity.setEditing(false);
-                    } else {
-                        mActivity.displayRandomWord();
+                    GenericTypeIndicator<List<DictionaryEntry>> dictinaryEntries =
+                            new GenericTypeIndicator<List<DictionaryEntry>>() {
+                            };
+
+                    List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
+                    if (de != null) {
+                        mActivity.setDictionaryEntries(de);
+                        if (mActivity.isEditing()) {
+                            mActivity.setEditing(false);
+                        } else {
+                            mActivity.displayRandomWord();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                int blub = 4;
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    int blub = 4;
+                }
+            });
+        } else {
+            mActivity.signInOrUp();
+        }
+    }
+
+    public DatabaseReference getDictionary() {
+        if(mCurrentUser != null) {
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
+            DatabaseReference dictionary = userRef.child("dictionary");
+            return dictionary;
+        } else {
+            return null;
+        }
     }
 
     public ArrayList<DictionaryEntry> getDictionaryData() {
@@ -131,7 +139,7 @@ public class FirebaseDataService implements DataService {
 
     @Override
     public void setValue(List<DictionaryEntry> dictionaryEntries) {
-        dictionaryRef.setValue(dictionaryEntries);
+        mDictionaryRef.setValue(dictionaryEntries);
     }
 
     @Override
