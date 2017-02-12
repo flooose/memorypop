@@ -36,10 +36,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
     @Inject
     DataService firebaseDataService;
 
-    @BindView(R.id.playLayout) View playLayout;
     @BindView(R.id.newWordLayout) View newWordLayout;
-    @BindView(R.id.startLayout) View startLayout;
-    @BindView(R.id.reveal_definition) Button definitionToggle;
     @BindView(R.id.newWord) EditText newWord;
     @BindView(R.id.newWordDefinition) EditText newWordDefinition;
 
@@ -53,52 +50,31 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         component.inject(this);
 
         dictionaryEntries = firebaseDataService.getDictionaryData();
-
-        // TODO move this to own layout
-        playButton = startLayout.findViewById(R.id.play_button);
-        newWordButton = startLayout.findViewById(R.id.new_word_button);
-
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                playLayout.setVisibility(View.VISIBLE);
-                newWordLayout.setVisibility(View.GONE);
-
-            }
-        });
-
-        newWordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newWordLayout.setVisibility(View.VISIBLE);
-                playLayout.setVisibility(View.GONE);
-
-            }
-        });
     }
 
-    @OnClick(R.id.reveal_definition)
-    public void toggleDefinition() {
-        TextView wordView = (TextView) findViewById(R.id.entry_word);
+//    @OnClick(R.id.reveal_definition)
+//    public void toggleDefinition() {
+//        TextView wordView = (TextView) findViewById(R.id.entry_word);
+//
+//        if (definitionToggle.getText().equals(getString(R.string.reveal_definition))) {
+//            definitionToggle.setText(getString(R.string.ok));
+//            wordView.setText(currentEntry.mDefinition);
+//        } else {
+//            definitionToggle.setText(getString(R.string.reveal_definition));
+//            wordView.setText(currentEntry.mWord);
+//
+//        }
+//    }
 
-        if (definitionToggle.getText().equals(getString(R.string.reveal_definition))) {
-            definitionToggle.setText(getString(R.string.ok));
-            wordView.setText(currentEntry.mDefinition);
-        } else {
-            definitionToggle.setText(getString(R.string.reveal_definition));
-            wordView.setText(currentEntry.mWord);
-
-        }
-    }
-
-    @OnClick(R.id.ok)
+    // TODO Legacy, This needs to be removed from the interface
+    //@OnClick(R.id.ok)
     public void displayRandomWord() {
-        int currentEntryIndex = new Random().nextInt(dictionaryEntries.size());
-        currentEntry = dictionaryEntries.get(currentEntryIndex);
-
-        TextView wordView = (TextView) findViewById(R.id.entry_word);
-        wordView.setText(currentEntry.mWord);
-        definitionToggle.setText(getString(R.string.reveal_definition));
+//        int currentEntryIndex = new Random().nextInt(dictionaryEntries.size());
+//        currentEntry = dictionaryEntries.get(currentEntryIndex);
+//
+//        TextView wordView = (TextView) findViewById(R.id.entry_word);
+//        wordView.setText(currentEntry.mWord);
+//        definitionToggle.setText(getString(R.string.reveal_definition));
 
     }
 
@@ -131,18 +107,16 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
     public void cancelNewWord(View view) {
         newWordDefinition.setText("");
         newWord.setText("");
-        playLayout.setVisibility(View.VISIBLE);
-        newWordLayout.setVisibility(View.GONE);
+        finish();
     }
 
-    @OnClick(R.id.editEntry)
-    public void editEntry(View view) {
-        editing = true;
-        newWord.setText(currentEntry.mWord);
-        newWordDefinition.setText(currentEntry.mDefinition);
-        newWordLayout.setVisibility(View.VISIBLE);
-        playLayout.setVisibility(View.GONE);
-    }
+//    @OnClick(R.id.editEntry)
+//    public void editEntry(View view) {
+//        editing = true;
+//        newWord.setText(currentEntry.mWord);
+//        newWordDefinition.setText(currentEntry.mDefinition);
+//        newWordLayout.setVisibility(View.VISIBLE);
+//    }
 
     @Override
     public boolean isEditing() {

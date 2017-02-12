@@ -12,82 +12,12 @@
     tools:context="de.jjff.flooose.memorypop.NewEntryActivity">
 
     <LinearLayout
-        android:id="@+id/startLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/new_word_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="36dp"
-            android:src="@drawable/new_entry" />
-
-        <ImageView
-            android:id="@+id/play_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/play" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/playLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/entry_word"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:text="etwas nicht entgehen lassen"
-            android:textSize="36dp"
-            android:textStyle="italic" />
-
-        <TextView
-            android:id="@+id/entry_definition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/reveal_definition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reveal_definition" />
-
-            <Button
-                android:id="@+id/ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/next_word" />
-
-            <Button
-                android:id="@+id/editEntry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/edit" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/newWordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <EditText
             android:id="@+id/newWord"
