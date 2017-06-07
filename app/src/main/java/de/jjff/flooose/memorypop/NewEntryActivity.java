@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -29,7 +28,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
     private View playButton;
     private View newWordButton;
     public boolean editing;
-    public List<DictionaryEntry> dictionaryEntries;
+    public DataSnapshot dictionaryEntries;
 
     ActivityComponent component;
 
@@ -44,6 +43,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
         ButterKnife.bind(this);
 
         component = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
@@ -52,30 +52,23 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         dictionaryEntries = firebaseDataService.getDictionaryData();
     }
 
-//    @OnClick(R.id.reveal_definition)
-//    public void toggleDefinition() {
-//        TextView wordView = (TextView) findViewById(R.id.entry_word);
-//
-//        if (definitionToggle.getText().equals(getString(R.string.reveal_definition))) {
-//            definitionToggle.setText(getString(R.string.ok));
-//            wordView.setText(currentEntry.mDefinition);
-//        } else {
-//            definitionToggle.setText(getString(R.string.reveal_definition));
-//            wordView.setText(currentEntry.mWord);
-//
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onStart();
+        Intent intent = getIntent();
+
+        if(intent.getParcelableExtra("entry") != null) {
+            DictionaryEntry dictionaryEntry = intent.getParcelableExtra("entry");
+            newWord.setText(dictionaryEntry.mWord);
+            newWordDefinition.setText(dictionaryEntry.mDefinition);
+        }
+
+    }
+
 
     // TODO Legacy, This needs to be removed from the interface
     //@OnClick(R.id.ok)
     public void displayRandomWord() {
-//        int currentEntryIndex = new Random().nextInt(dictionaryEntries.size());
-//        currentEntry = dictionaryEntries.get(currentEntryIndex);
-//
-//        TextView wordView = (TextView) findViewById(R.id.entry_word);
-//        wordView.setText(currentEntry.mWord);
-//        definitionToggle.setText(getString(R.string.reveal_definition));
-
     }
 
     @OnClick(R.id.submitNewWord)
@@ -84,16 +77,15 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         String definition = newWordDefinition.getText().toString();
 
         DictionaryEntry dictionaryEntry = new DictionaryEntry(word, definition);
-        int dictionaryIndex = dictionaryEntries.indexOf(dictionaryEntry);
 
         if (!word.isEmpty()) {
-            if (dictionaryIndex >= 0) {
-                dictionaryEntries.set(dictionaryIndex, dictionaryEntry);
+            if(getIntent().getParcelableExtra("entry") != null) {
+                firebaseDataService.updateValue(dictionaryEntry);
+                finish();
             } else {
-                dictionaryEntries.add(dictionaryEntry);
+                firebaseDataService.addValue(dictionaryEntry);
             }
 
-            firebaseDataService.setValue(dictionaryEntries);
         }
     }
 
@@ -110,14 +102,6 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         finish();
     }
 
-//    @OnClick(R.id.editEntry)
-//    public void editEntry(View view) {
-//        editing = true;
-//        newWord.setText(currentEntry.mWord);
-//        newWordDefinition.setText(currentEntry.mDefinition);
-//        newWordLayout.setVisibility(View.VISIBLE);
-//    }
-
     @Override
     public boolean isEditing() {
         return editing;
@@ -129,7 +113,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
     }
 
     @Override
-    public void setDictionaryEntries(List<DictionaryEntry> de) {
+    public void setDictionaryData(DataSnapshot de) {
         this.dictionaryEntries = de;
     }
 

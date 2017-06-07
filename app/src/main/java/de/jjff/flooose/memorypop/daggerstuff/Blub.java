@@ -2,6 +2,8 @@ package de.jjff.flooose.memorypop.daggerstuff;
 
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.List;
 
 import de.jjff.flooose.memorypop.DictionaryEntry;
@@ -16,7 +18,7 @@ public interface Blub {
 
     void displayRandomWord();
 
-    void setDictionaryEntries(List<DictionaryEntry> de);
+    void setDictionaryData(DataSnapshot de);
 
     boolean isEditing();
 

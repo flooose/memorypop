@@ -13,7 +13,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.jjff.flooose.memorypop.DictionaryEntry;
@@ -31,6 +30,8 @@ public class FirebaseDataService implements DataService {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mCurrentUser;
     private DatabaseReference mDictionaryRef;
+    private DataSnapshot mDataSnapshot;
+    private boolean really;
 
     public FirebaseDataService(Blub activity) {
         // this should probably be an interface, not a whole activity
@@ -61,12 +62,11 @@ public class FirebaseDataService implements DataService {
     private void populateDatabase() {
         mDictionaryRef = getDictionary();
 
-        if(mDictionaryRef != null) {
+        if (mDictionaryRef != null) {
 
             mDictionaryRef.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    mActivity.resetFrom();
                 }
 
                 @Override
@@ -94,21 +94,19 @@ public class FirebaseDataService implements DataService {
             mDictionaryRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {
-                    };
-
+                    FirebaseDataService.this.mDataSnapshot = dataSnapshot;
                     GenericTypeIndicator<List<DictionaryEntry>> dictinaryEntries =
                             new GenericTypeIndicator<List<DictionaryEntry>>() {
                             };
 
-                    List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
-                    if (de != null) {
-                        mActivity.setDictionaryEntries(de);
-                        if (mActivity.isEditing()) {
-                            mActivity.setEditing(false);
-                        } else {
-                            mActivity.displayRandomWord();
-                        }
+                    //List<DictionaryEntry> de = dataSnapshot.getValue(dictinaryEntries);
+                    List<DictionaryEntry> de = null;
+                    mActivity.setDictionaryData(mDataSnapshot);
+
+                    if (mActivity.isEditing()) {
+                        mActivity.setEditing(false);
+                    } else {
+                        mActivity.displayRandomWord();
                     }
                 }
 
@@ -123,28 +121,83 @@ public class FirebaseDataService implements DataService {
     }
 
     public DatabaseReference getDictionary() {
-        if(mCurrentUser != null) {
+        if (mCurrentUser != null) {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
-            DatabaseReference dictionary = userRef.child("dictionary");
+            DatabaseReference dictionary = userRef.child("dictionary2");
             return dictionary;
         } else {
             return null;
         }
     }
 
-    public ArrayList<DictionaryEntry> getDictionaryData() {
+    public DataSnapshot getDictionaryData() {
         return null;
     }
 
     @Override
     public void setValue(List<DictionaryEntry> dictionaryEntries) {
-        mDictionaryRef.setValue(dictionaryEntries);
+        // mDictionaryRef.setValue(dictionaryEntries);
     }
 
     @Override
     public void stop() {
         mAuth.removeAuthStateListener(mAuthListener);
         mAuth.signOut();
+    }
+
+    private void wtf(boolean really) {
+        this.really = really;
+    }
+
+    @Override
+    public void addValue(DictionaryEntry dictionaryEntry) {
+        mDictionaryRef.push().setValue(dictionaryEntry);
+        mActivity.resetFrom();
+    }
+
+    @Override
+    public void updateValue(final DictionaryEntry dictionaryEntry) {
+        mDictionaryRef.orderByChild("mWord")
+                .equalTo(dictionaryEntry.mWord)
+                .limitToFirst(1)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        wtf(true);
+                        DictionaryEntry entry = dataSnapshot.getValue(DictionaryEntry.class);
+                        entry.mDefinition = dictionaryEntry.mDefinition;
+                        mDictionaryRef.child(dataSnapshot.getKey()).setValue(entry);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        dataSnapshot.getValue();
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getValue();
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        dataSnapshot.getValue();
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    @Override
+    public DictionaryEntry getRandomWord() {
+        Math.random();
+        return null;
     }
 }

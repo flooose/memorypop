@@ -1,11 +1,15 @@
 package de.jjff.flooose.memorypop;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -25,9 +29,9 @@ public class PlayActivity extends AppCompatActivity implements Blub {
     @BindView(R.id.play_activity_reveal_definition)
     Button definitionToggle;
 
-    private DictionaryEntry currentEntry;
+    private DictionaryEntry mCurrentEntry;
     ActivityComponent component;
-    private List<DictionaryEntry> dictionaryEntries;
+    private DataSnapshot dictionaryEntries;
 
     @Inject
     DataService firebaseDataService;
@@ -48,10 +52,10 @@ public class PlayActivity extends AppCompatActivity implements Blub {
 
         if (definitionToggle.getText().equals(getString(R.string.reveal_definition))) {
             definitionToggle.setText(getString(R.string.ok));
-            wordView.setText(currentEntry.mDefinition);
+            wordView.setText(mCurrentEntry.mDefinition);
         } else {
             definitionToggle.setText(getString(R.string.reveal_definition));
-            wordView.setText(currentEntry.mWord);
+            wordView.setText(mCurrentEntry.mWord);
 
         }
     }
@@ -75,17 +79,46 @@ public class PlayActivity extends AppCompatActivity implements Blub {
     @Override
     @OnClick(R.id.ok)
     public void displayRandomWord() {
-        int currentEntryIndex = new Random().nextInt(dictionaryEntries.size());
-        currentEntry = dictionaryEntries.get(currentEntryIndex);
+        long numChildren = dictionaryEntries.getChildrenCount();
+        int index, count = 0;
+        index = new Random().nextInt((int) numChildren);
+
+        Iterator<DataSnapshot> dictionaryEntriesIterator = dictionaryEntries.getChildren().iterator();
+        DataSnapshot currentEntryDS = dictionaryEntriesIterator.next();
+        while(dictionaryEntriesIterator.hasNext() && count < index) {
+            currentEntryDS = dictionaryEntriesIterator.next();
+            count++;
+        }
+        mCurrentEntry = currentEntryDS.getValue(DictionaryEntry.class);
 
         TextView wordView = (TextView) findViewById(R.id.entry_word);
-        wordView.setText(currentEntry.mWord);
+        wordView.setText(mCurrentEntry.mWord);
         definitionToggle.setText(getString(R.string.reveal_definition));
 
     }
 
+    @OnClick(R.id.editEntry)
+    public void editEntry(View view) {
+        Intent intent = new Intent(this, NewEntryActivity.class);
+        intent.putExtra("entry", mCurrentEntry);
+        startActivity(intent);
+    }
+
+
+
+    public <T> T doBlub(Class<T> var1) {
+        try {
+            return var1.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
-    public void setDictionaryEntries(List<DictionaryEntry> de) {
+    public void setDictionaryData(DataSnapshot de) {
         this.dictionaryEntries = de;
     }
 
