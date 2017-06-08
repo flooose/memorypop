@@ -13,7 +13,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import de.jjff.flooose.memorypop.DictionaryEntry;
 import de.jjff.flooose.memorypop.daggerstuff.Blub;
@@ -131,10 +133,6 @@ public class FirebaseDataService implements DataService {
         }
     }
 
-    public DataSnapshot getDictionaryData() {
-        return null;
-    }
-
     @Override
     public void setValue(List<DictionaryEntry> dictionaryEntries) {
         // mDictionaryRef.setValue(dictionaryEntries);
@@ -200,4 +198,36 @@ public class FirebaseDataService implements DataService {
         Math.random();
         return null;
     }
+
+    @Override
+    public void migrate() {
+        if (mCurrentUser != null) {
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
+            final DatabaseReference dictionary = userRef.child("dictionary");
+            dictionary.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
+                        int count = 0;
+                        Iterator<DataSnapshot> dictionaryEntriesIterator = dataSnapshot.getChildren().iterator();
+                        DataSnapshot currentEntryDS = dictionaryEntriesIterator.next();
+                        while (dictionaryEntriesIterator.hasNext()) {
+                            DictionaryEntry entry = currentEntryDS.getValue(DictionaryEntry.class);
+                            addValue(entry);
+                            currentEntryDS = dictionaryEntriesIterator.next();
+                            count++;
+                        }
+                        dictionary.removeValue();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
 }
+

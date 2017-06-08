@@ -11,8 +11,6 @@ import de.jjff.flooose.memorypop.DictionaryEntry;
 
 
 public interface DataService {
-    DataSnapshot getDictionaryData();
-
     void setValue(List<DictionaryEntry> dictionaryEntries);
 
     void stop();
@@ -22,4 +20,6 @@ public interface DataService {
     void updateValue(DictionaryEntry dictionaryEntry);
 
     DictionaryEntry getRandomWord();
+
+    void migrate();
 }

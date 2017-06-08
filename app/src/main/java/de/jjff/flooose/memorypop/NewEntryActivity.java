@@ -8,8 +8,6 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -49,7 +47,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         component = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
         component.inject(this);
 
-        dictionaryEntries = firebaseDataService.getDictionaryData();
+        firebaseDataService.migrate();
     }
 
     @Override

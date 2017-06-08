@@ -12,7 +12,6 @@ import de.jjff.flooose.memorypop.services.FirebaseDataService;
 public class ActivityModule {
     Blub mActivity;
 
-    // this should probably be an interface instead of an entire activity
     public ActivityModule(Blub activity) {
         mActivity = activity;
     }
