@@ -44,6 +44,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
         component = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
         component.inject(this);
 
+        // TODO: this belongs in MainActivity, or some place else, but not here
         firebaseDataService.migrate();
     }
 
@@ -92,19 +93,7 @@ public class NewEntryActivity extends AppCompatActivity implements Blub {
 
     @OnClick(R.id.cancelNewWord)
     public void cancelNewWord(View view) {
-        newWordDefinition.setText("");
-        newWord.setText("");
         finish();
-    }
-
-    @Override
-    public boolean isEditing() {
-        return editing;
-    }
-
-    @Override
-    public void setEditing(boolean b) {
-        this.editing = b;
     }
 
     @Override

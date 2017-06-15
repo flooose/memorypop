@@ -121,14 +121,4 @@ public class PlayActivity extends AppCompatActivity implements Blub {
     public void setDictionaryData(DataSnapshot de) {
         this.dictionaryEntries = de;
     }
-
-    @Override
-    public boolean isEditing() {
-        return false;
-    }
-
-    @Override
-    public void setEditing(boolean b) {
-
-    }
 }

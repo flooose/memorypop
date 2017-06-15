@@ -19,8 +19,4 @@ public interface Blub {
     void displayRandomWord();
 
     void setDictionaryData(DataSnapshot de);
-
-    boolean isEditing();
-
-    void setEditing(boolean b);
 }

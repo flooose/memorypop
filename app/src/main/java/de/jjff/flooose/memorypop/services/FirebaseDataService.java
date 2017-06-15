@@ -75,23 +75,19 @@ public class FirebaseDataService implements DataService {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    mActivity.resetFrom();
                     mActivity.cancelNewWord(null);
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    mActivity.resetFrom();
                 }
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    mActivity.resetFrom();
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    mActivity.resetFrom();
                 }
             });
 
@@ -107,11 +103,7 @@ public class FirebaseDataService implements DataService {
                     List<DictionaryEntry> de = null;
                     mActivity.setDictionaryData(mDataSnapshot);
 
-                    if (mActivity.isEditing()) {
-                        mActivity.setEditing(false);
-                    } else {
-                        mActivity.displayRandomWord();
-                    }
+                    mActivity.displayRandomWord();
                 }
 
                 @Override
