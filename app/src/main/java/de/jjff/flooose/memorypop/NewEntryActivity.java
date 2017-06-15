@@ -22,9 +22,6 @@ import de.jjff.flooose.memorypop.services.DataService;
 
 public class NewEntryActivity extends AppCompatActivity implements Blub {
 
-    private DictionaryEntry currentEntry;
-    private View playButton;
-    private View newWordButton;
     public boolean editing;
     public DataSnapshot dictionaryEntries;
 

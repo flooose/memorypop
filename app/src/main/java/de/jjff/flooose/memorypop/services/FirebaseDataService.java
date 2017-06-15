@@ -19,6 +19,7 @@ import java.util.Random;
 
 import de.jjff.flooose.memorypop.DictionaryEntry;
 import de.jjff.flooose.memorypop.daggerstuff.Blub;
+import de.jjff.flooose.memorypop.migrations.ConvertEntriesToKeyValuePairs;
 
 import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
 
@@ -27,6 +28,7 @@ import static de.jjff.flooose.memorypop.MemoryPopApplication.LOG_TAG;
  */
 
 public class FirebaseDataService implements DataService {
+    public static final String CURRENT_DICTIONARY = "dictionary2";
     private final Blub mActivity;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -126,7 +128,7 @@ public class FirebaseDataService implements DataService {
         if (mCurrentUser != null) {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
-            DatabaseReference dictionary = userRef.child("dictionary2");
+            DatabaseReference dictionary = userRef.child(CURRENT_DICTIONARY);
             return dictionary;
         } else {
             return null;
@@ -204,29 +206,7 @@ public class FirebaseDataService implements DataService {
         if (mCurrentUser != null) {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference userRef = database.getReference(mCurrentUser.getUid());
-            final DatabaseReference dictionary = userRef.child("dictionary");
-            dictionary.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        int count = 0;
-                        Iterator<DataSnapshot> dictionaryEntriesIterator = dataSnapshot.getChildren().iterator();
-                        DataSnapshot currentEntryDS = dictionaryEntriesIterator.next();
-                        while (dictionaryEntriesIterator.hasNext()) {
-                            DictionaryEntry entry = currentEntryDS.getValue(DictionaryEntry.class);
-                            addValue(entry);
-                            currentEntryDS = dictionaryEntriesIterator.next();
-                            count++;
-                        }
-                        dictionary.removeValue();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            new ConvertEntriesToKeyValuePairs(userRef, getDictionary()).migrate();
         }
     }
 }
