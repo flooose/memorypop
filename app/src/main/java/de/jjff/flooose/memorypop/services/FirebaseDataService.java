@@ -35,7 +35,6 @@ public class FirebaseDataService implements DataService {
     private FirebaseUser mCurrentUser;
     private DatabaseReference mDictionaryRef;
     private DataSnapshot mDataSnapshot;
-    private boolean really;
 
     public FirebaseDataService(Blub activity) {
         // this should probably be an interface, not a whole activity
@@ -138,10 +137,6 @@ public class FirebaseDataService implements DataService {
         mAuth.signOut();
     }
 
-    private void wtf(boolean really) {
-        this.really = really;
-    }
-
     @Override
     public void addValue(DictionaryEntry dictionaryEntry) {
         mDictionaryRef.push().setValue(dictionaryEntry);
@@ -156,7 +151,6 @@ public class FirebaseDataService implements DataService {
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        wtf(true);
                         DictionaryEntry entry = dataSnapshot.getValue(DictionaryEntry.class);
                         entry.mDefinition = dictionaryEntry.mDefinition;
                         mDictionaryRef.child(dataSnapshot.getKey()).setValue(entry);
