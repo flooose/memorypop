@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.provider.ContactsContract;
 
 import dagger.Component;
+import de.jjff.flooose.memorypop.MemoryPopGame;
 import de.jjff.flooose.memorypop.NewEntryActivity;
 import de.jjff.flooose.memorypop.PlayActivity;
 import de.jjff.flooose.memorypop.services.DataService;
